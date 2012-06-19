@@ -14,19 +14,17 @@ end
 
 require 'active_record'
 require 'rspec'
+require 'database_cleaner'
+
 require_relative '../lib/has_content'
+require_relative 'test_app'
 
-ActiveRecord::Base.establish_connection(:adapter => 'sqlite3', :database => ":memory:")
-ActiveRecord::Migration.suppress_messages do 
-  ActiveRecord::Schema.define do
-    create_table(:content_owners, :force => true) do |t|
-      t.string :name
-    end
-  
-    require_relative '../db/migrate/create_has_content_records'
-    CreateHasContentRecords.new.change
-  end
-end
+DatabaseCleaner.strategy = :truncation
+DatabaseCleaner.clean_with :truncation
 
-class ContentOwner < ActiveRecord::Base
+RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+
+  config.before(:each) { DatabaseCleaner.start }
+  config.after(:each)  { DatabaseCleaner.clean }
 end

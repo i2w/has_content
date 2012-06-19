@@ -1,48 +1,50 @@
 require 'spec_helper'
 
 describe HasContent::Record do
-  describe 'starting with valid attributes' do
-    subject       { record }
+  subject { record }
+
+  let(:record) { described_class.new attrs }
+  let(:attrs)  { {} }
+  
+  it "does not save itself - as it's invalid" do
+    should be_new_record
+  end
+  
+  describe 'with valid attributes' do
+    let(:attrs) { {:name => 'body', :owner => owner} }
+    let(:owner) { ContentOwner.create! }
     
-    let(:record)  { described_class.new :name => 'body', :owner =>  owner }
-    let(:owner)   { ContentOwner.create! }
+    it "saves itself (to enable always referring relationships)" do
+      should_not be_new_record
+    end
     
     it { should be_valid }
     
-    it 'requires :owner' do
-      subject.owner = nil
-      should_not be_valid
-    end
-    
-    it 'requires :name' do
-      subject.name = nil
-      should_not be_valid
-    end
-    
-    it 'requires :name + :owner be unique' do
-      record.save!
-      record = described_class.new :name => 'body', :owner => owner
-      record.should_not be_valid
-      record.name = 'boody'
-      record.should be_valid
-      record.name = 'body'
-      record.owner = ContentOwner.create!
-      record.should be_valid
-    end
-    
-    describe 'requires :name be in a format suitable for a simple accessor method' do
-      ['foo bar', '123bar', 'foo!', 'foo=', 'foo-bar', 'foo+bar'].each do |invalid|
-        context invalid do
-          before { record.name = invalid }
-          it { should_not be_valid}
-        end
+    describe '[validation]' do
+      it 'requires :owner' do
+        subject.owner = nil
+        should_not be_valid
       end
-
-      ['_foo', 'foo_bar', 'a123bar', 'foo', 'FooBar'].each do |valid|
-        context valid do
-          before { record.name = valid }
-          it { should be_valid}
-        end
+    
+      it 'requires :name' do
+        subject.name = nil
+        should_not be_valid
+      end
+    
+      it 'requires :name + :owner be unique' do
+        record.save!
+        record = described_class.new :name => 'body', :owner => owner
+        record.should_not be_valid
+        record.name = 'excerpt'
+        record.should be_valid
+        record.name = 'body'
+        record.owner = ContentOwner.create!
+        record.should be_valid
+      end
+    
+      it 'requires :name be one of owner\'s content_names' do
+        record.name = 'not_there'
+        record.should_not be_valid
       end
     end
   end
