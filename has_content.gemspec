@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Ian White"]
   s.email       = ["ian.w.white@gmail.com"]
   s.homepage    = "http://github.com/i2w/has_content"
-  s.summary     = "Simple wrapper for adding content via a polymorphic join for any object"
-  s.description = "Simple wrapper for adding content via a polymorphic join for any object.  Version #{HasContent::VERSION}."
+  s.summary     = "Simple wrapper for adding content via a polymorphic join for any active record"
+  s.description = "Simple wrapper for adding content via a polymorphic join for any active record.  Version #{HasContent::VERSION}."
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.md", "CHANGELOG"]
   s.test_files = Dir["spec/**/*"]
