@@ -1,2 +1,7 @@
+= 0.0.3
+  * Set attr_accessible to :content only on the record, set name and owner via relationships
+
+= 0.0.2
+
 = 0.0.1
   * Initial Release

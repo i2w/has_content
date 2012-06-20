@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    has_content (0.0.2)
+    has_content (0.0.3)
       activerecord (>= 3.2)
 
 GEM
