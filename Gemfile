@@ -5,7 +5,8 @@ source "http://rubygems.org"
 # development dependencies will be added by default to the :development group.
 gemspec
 
-group :test do
+group :development do
   gem 'simplecov', :require => false
   gem 'pry'
+  gem 'guard-rspec'
 end

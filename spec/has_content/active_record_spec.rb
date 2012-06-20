@@ -23,4 +23,13 @@ describe HasContent::ActiveRecord do
       end
     end
   end
+  
+  it '.has_content() raises ArgumentError' do
+    expect{ content_owner.has_content }.to raise_error(ArgumentError)
+  end 
+  
+  it '.has_content(<extsiting name>) raises ArgumentError' do
+    content_owner.has_content(:foo)
+    expect{ content_owner.has_content(:foo) }.to raise_error(ArgumentError)
+  end
 end

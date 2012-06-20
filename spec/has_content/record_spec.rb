@@ -21,11 +21,6 @@ describe HasContent::Record do
     it { should be_valid }
     
     describe '[validation]' do
-      it 'requires :owner' do
-        subject.owner = nil
-        should_not be_valid
-      end
-    
       it 'requires :name' do
         subject.name = nil
         should_not be_valid
@@ -46,6 +41,15 @@ describe HasContent::Record do
         record.name = 'not_there'
         record.should_not be_valid
       end
+    end
+  end
+  
+  describe '#to_s' do
+    subject { record.to_s }
+    
+    it 'is the content attribute' do
+      record.content = 'foo'
+      subject.should == 'foo'
     end
   end
 end
