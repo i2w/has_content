@@ -41,22 +41,25 @@ module HasContent
         
         has_one "#{name}_content".to_sym, options.reverse_merge(:as => 'owner', :class_name => 'HasContent::Record', :dependent => :destroy, :conditions => {name: name}, :autosave => true)
         
+        # content getter (delegates to the content association)
         define_method name do
-          send("find_or_build_#{name}_content").content
+          send("get_#{name}_content").content
         end
         
+        # content setter (delegates to the content association, updating timestamps on owner record if required)
         define_method "#{name}=" do |value|
-          (send("find_or_build_#{name}_content").content = value).tap do |*|
-            if respond_to?(:updated_at?) && send("find_or_build_#{name}_content").changed?
+          (send("get_#{name}_content").content = value).tap do |*|
+            if respond_to?(:updated_at?) && send("get_#{name}_content").changed?
               updated_at_will_change!
             end
           end
         end
         
-        define_method "find_or_build_#{name}_content" do
-          send("#{name}_content") || send("build_#{name}_content", name: name)
+        # find or build (and save if possible) the content association
+        define_method "get_#{name}_content" do
+          send("#{name}_content") or send("build_#{name}_content").tap {|r| r.name = name; r.save unless new_record? }
         end
-        private "find_or_build_#{name}_content".to_sym
+        private "get_#{name}_content".to_sym
       end
     end
   end

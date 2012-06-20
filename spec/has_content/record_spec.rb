@@ -3,20 +3,15 @@ require 'spec_helper'
 describe HasContent::Record do
   subject { record }
 
-  let(:record) { described_class.new attrs }
-  let(:attrs)  { {} }
-  
-  it "does not save itself - as it's invalid" do
-    should be_new_record
-  end
+  let(:record) { described_class.new }
   
   describe 'with valid attributes' do
-    let(:attrs) { {:name => 'body', :owner => owner} }
-    let(:owner) { ContentOwner.create! }
-    
-    it "saves itself (to enable always referring relationships)" do
-      should_not be_new_record
+    before do
+      record.name = 'body'
+      record.owner = owner
     end
+    
+    let(:owner) { ContentOwner.create! }
     
     it { should be_valid }
     
@@ -28,7 +23,7 @@ describe HasContent::Record do
     
       it 'requires :name + :owner be unique' do
         record.save!
-        record = described_class.new :name => 'body', :owner => owner
+        record = described_class.new {|r| r.name = 'body'; r.owner = owner }
         record.should_not be_valid
         record.name = 'excerpt'
         record.should be_valid
