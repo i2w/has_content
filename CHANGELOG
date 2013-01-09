@@ -1,3 +1,6 @@
+= 0.0.4
+  * introduce ContentOwner#<content_name>_record which autocreates a record (or builds if owner not saved)
+
 = 0.0.3
   * Set attr_accessible to :content only on the record, set name and owner via relationships
 

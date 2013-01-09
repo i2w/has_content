@@ -43,23 +43,22 @@ module HasContent
         
         # content getter (delegates to the content association)
         define_method name do
-          send("get_#{name}_content").content
+          send("#{name}_record").content
         end
         
         # content setter (delegates to the content association, updating timestamps on owner record if required)
         define_method "#{name}=" do |value|
-          (send("get_#{name}_content").content = value).tap do |*|
-            if respond_to?(:updated_at?) && send("get_#{name}_content").changed?
+          (send("#{name}_record").content = value).tap do |*|
+            if respond_to?(:updated_at?) && send("#{name}_record").changed?
               updated_at_will_change!
             end
           end
         end
         
         # find or build (and save if possible) the content association
-        define_method "get_#{name}_content" do
+        define_method "#{name}_record" do
           send("#{name}_content") or send("build_#{name}_content").tap {|r| r.name = name; r.save unless new_record? }
         end
-        private "get_#{name}_content".to_sym
       end
     end
   end

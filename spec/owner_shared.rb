@@ -41,6 +41,13 @@ shared_examples_for "new owner with has_content" do
       lambda { owner.send(content_name) }.should_not change(HasContent::Record, :count)
       lambda { owner.save! }.should change(HasContent::Record, :count).by(1) 
     end
+
+    describe "#<content_name>_association" do
+      subject { owner.send "#{content_name}_record" }
+
+      it { should be_a HasContent::Record }
+      it { should_not be_persisted }
+    end
   end
   
   context '[after being saved]' do
@@ -49,6 +56,12 @@ shared_examples_for "new owner with has_content" do
     it 'should create content record on access' do
       lambda { owner.send(content_name) }.should change(HasContent::Record, :count).by(1)
       lambda { owner.save! }.should_not change(HasContent::Record, :count)
+    end
+
+    describe "#<content_name>_association" do
+      subject { owner.send "#{content_name}_record" }
+
+      it { should be_persisted }
     end
   end
 end
